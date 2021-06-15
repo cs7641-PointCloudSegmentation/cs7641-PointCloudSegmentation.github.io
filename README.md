@@ -66,7 +66,7 @@ Figure 4. Example of point cloud classification results
 [5] Y. Yang, C. Feng, Y. Shen, and D. Tian, “Foldingnet: Interpretable unsupervised learningon 3d point clouds,”arXiv preprint arXiv:1712.07262, vol. 2, no. 3, p. 5, 2017.  
 [6] J. M. Biosca and J. L. Lerma, “Unsupervised robust planar segmentation of terrestri-al laser scanner point clouds based on fuzzy clustering methods,”ISPRS Journal ofPhotogrammetry and Remote Sensing, vol. 63, no. 1, pp. 84–98, 2008.  
 [7] L. Zhang and Z. Zhu, “Unsupervised feature learning for point cloud understandingby  contrasting  and  clustering  using  graph  convolutional  neural  networks,”  in2019International Conference on 3D Vision (3DV), pp. 395–404, IEEE, 2019.  
-[8] S.-L. F. R.-P. J. Cabo C, Ordóñez C and C.-J. AJ, “Multiscale supervised classificationof point clouds with urban and forest applications,”Sensors(Basel), vol. 19, 2019.3. Chen, Jingdao, Zsolt Kira, and Yong K. Cho. "LRGNet: Learnable Region Growing for Class-Agnostic Point Cloud Segmentation." IEEE Robotics and Automation Letters 6.2 (2021): 2799-2806.
+[8] S.-L. F. R.-P. J. Cabo C, Ordóñez C and C.-J. AJ, “Multiscale supervised classificationof point clouds with urban and forest applications,”Sensors(Basel), vol. 19, 2019.3. Chen, Jingdao, Zsolt Kira, and Yong K. Cho. "LRGNet: Learnable Region Growing for Class-Agnostic Point Cloud Segmentation." IEEE Robotics and Automation Letters 6.2 (2021): 2799-2806.  
 [9] Chen, J., Kira, Z., & Cho, Y. K. (2021). LRGNet: Learnable Region Growing for Class-Agnostic Point Cloud Segmentation. IEEE Robotics and Automation Letters, 6(2), 2799-2806.
 ***
 
