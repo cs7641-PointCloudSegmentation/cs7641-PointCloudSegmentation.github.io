@@ -23,7 +23,7 @@ In civil engineering, point clouds are being used to create indoor mapping build
 ### Dataset
 We plan to use the S3DIS dataset which contains 3D room scenes for semantic segmentation[3]. It contains point clouds of 276 rooms in 6 buildings, where each point is labeled in one of the 13 categories (wall, chair, table etc.). 
 <h1 align="center">
-<img src="imgs/S3DIS.png" width="80%" /> 
+<img src="https://github.com/cs7641-PointCloudSegmentation/cs7641-PointCloudSegmentation.github.io/blob/d489db2116af3904fc2583ad6bbb059f52e23829/imgs/S3DIS.png" width="80%" /> 
 </h1>
 <p align = "center">
 Figure 2. S3DIS dataset [3]
@@ -43,7 +43,7 @@ By integrating both methods of clustering and semantic segmentation in a complem
 ### 1. Point Cloud Clustering
 Our proposed method will be evaluated using the common clustering matrics of Normalized Mutual Information, Adjusted Mutual Information, and Adjusted Rand Index, and be compared with other state-of-the-art results on S3DIS.
 <h1 align="center">
-<img src="imgs/clustering_samples.png" width="80%" /> 
+<img src="https://github.com/cs7641-PointCloudSegmentation/cs7641-PointCloudSegmentation.github.io/blob/d489db2116af3904fc2583ad6bbb059f52e23829/imgs/clustering_samples.png" width="80%" /> 
 </h1>
 <p align = "center">
 Figure 3. Point cloud clustering samples extracted from [9]
@@ -52,7 +52,7 @@ Figure 3. Point cloud clustering samples extracted from [9]
 ### 2. Point Cloud Semantic Segmentation
 To evaluate the performance of our classification tasks, we will use six metrics to compare all methods: accuracy, precision, recall, F-1 score, mIoU, and mean average precision. A visual representation in point cloud data format will also be presented.
 <h1 align="center">
-<img src="imgs/example.png" width="80%" /> 
+<img src="https://github.com/cs7641-PointCloudSegmentation/cs7641-PointCloudSegmentation.github.io/blob/d489db2116af3904fc2583ad6bbb059f52e23829/imgs/example.png" width="80%" /> 
 </h1>
 <p align = "center">
 Figure 4. Example of point cloud classification results
