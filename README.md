@@ -20,43 +20,168 @@ In civil engineering, point clouds are being used to create indoor mapping build
 
 ## Methods
 
-### Dataset
-We plan to use the S3DIS dataset which contains 3D room scenes for semantic segmentation[3]. It contains point clouds of 276 rooms in 6 buildings, where each point is labeled in one of the 13 categories (wall, chair, table etc.). 
+### 1. Dataset and Pre-processing
+#### Standard 3D Indoor Space Dataset
+We use the S3DIS dataset which contains 3D room scenes for semantic segmentation[3]. It contains point clouds of 276 rooms in 6 buildings, where each point is labeled in one of the 13 categories (wall, chair, table etc.).
+
 <h1 align="center">
-<img src="https://github.com/yyajima21/cs7641_project/blob/64bb8b932e197f125725fda3a64128d445da2f12/imgs/S3DIS.png" width="80%" /> 
+<img src="https://user-images.githubusercontent.com/27985242/124848554-17e04300-df6b-11eb-9668-74bce54c04ea.png" width="100%" /> 
 </h1>
 <p align = "center">
 Figure 2. S3DIS dataset [3]
 </p>
 
-### 1. Point Cloud Clustering via Unsupervised Learning
-We plan to use an unsupervised learning approach for the point cloud clustering task that subdivides a large point cloud into smaller chunks with cohesive units. The clustering results of the instance objects will be used for subsequent processing to supplement the semantic segmentation [4, 5]. As a starting point, we will ensemble the clustering results of multiple methods like gaussian mixture model and density-based spatial clustering of applications. 
+#### Pre-processing 
+ To clean up this dataset, all points are rounded to first decimal place and downsampled to reduce the size of overall point cloud data. Additionally, all points are centered to align coordinates of point cloud objects. It's a very large dataset, so for the scope of this project, we are focusing on the first 2 buildings. Based on the ground truth provided, we prepare labeled point clouds for both semantic and instance segmentation (figure 3). 
 
-### 2. Point Cloud Semantic Segmentation via Supervised Learning 
+ <h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124848594-2fb7c700-df6b-11eb-9cb9-57546e23a1f5.png" width="100%" /> 
+</h1>
+<p align = "center">
+Figure 3. A sample of (a) semantic label, (b) instance label. Note that the same objects like a wall and a chair in the semantic label is distinguished and separated in the instance label.
+</p>
+
+#### Feature Selections
+Since a point cloud contains only 6 features of xyzrgb, we do not confine pre-processing methods as feature reduction like PCA. Additionally, we increase features reflecting geometry natures, such as surface normals and curvature.
+
+### 2. Point Cloud Clustering via Unsupervised Learning
+
+#### Semi-Supervised K-Means and GMM
+We attempted K-Means and GMM clustering with our centered dataset preprocessed in several different ways: 1) the original data, 2) the normalized data, 3) the data with 3 PCA components, 4) the normalized data with 3 PCA components. We processed and clustered the data one room at a time to relate the points in each room to eachother and simplify the clustering task. For each room, we tried several different values of K and chose the one that resulted in the highest homogeneity with the ground-truth labels. The reason we clustered on homogeneity as opposed to Mutual Information or the Rand Index is because the points in the s3dis dataset are labeled by classes that can each correspond to multiple objects that would not necessarily be clustered together. For example, a chair on one end of a room would probably not be clustered with a chair on the other end, though they would both be labeled as a chair. Mutual Information and the Rand Index penalize clustering that divides classes, but we care more about how well clusters are divided into classes than about whether classes are divided into different clusters. We limited the number of clusters to between the number of ground-truth labels present in that room to double that number. We want to ensure that each label is theoretically represented at least once, and we limited the number to double the number of ground-truth labels to limit the time required to perform clustering and prevent super small, trivially homogenous clusters. For a single room, homogeneity scores can be visualized:
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124848627-3c3c1f80-df6b-11eb-9ca2-4e5b72ce0ada.png" width="80%" /> 
+</h1>
+<p align = "center">
+Figure 4. Homogeneity from 3 to 20 clusters for Area 1 Conference Room 1
+</p>
+
+Then we calculated the average homogeneity and found that for both K-Means and GMM, the most homogenous (43% for K-Means and 65% for GMM) clusters resulted from using the normalized data. To further analyze the normalized data clustering, we found the proportions of all ground-truth labels in each cluster in the dataset and graphed those percentages to show how strongly the ground-truth labels were clustered:
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124848657-4a8a3b80-df6b-11eb-8b0e-53d2fea3905d.png" width="80%" /> 
+</h1>
+<p align = "center">
+Figure 5. K-Means Homogeneity Analysis
+</p>
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124848676-5413a380-df6b-11eb-9007-0b9c9ed602bb.png" width="80%" /> 
+</h1>
+<p align = "center">
+Figure 6. GMM Homogeneity Analysis
+</p>
+
+The most representative ground-truth label for each cluster forms roughly 40-100% of that cluster, with many forming over 80% of their cluster. Ground-truth labels are significantly correlated with clusters, supporting our 65% average homogeneity score. 
+We also did a visual comparison of ground-truth labels to cluster labels for 3 rooms:
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124848709-6261bf80-df6b-11eb-8d06-225ab2e44a20.png" width="80%" /> 
+<img src="https://user-images.githubusercontent.com/27985242/124848737-6db4eb00-df6b-11eb-9a09-95f8335528fa.pngg" width="80%" /> 
+</h1>
+<p align = "center">
+Figure 7. Area 1 Conference Room 1
+</p>
+
+The main features of the room are visible in all three images, showing the correlation between the clustering and the ground-truth labels. We can see that the KMeans clusters are more patchy; the GMM clusters more closely approximate the ground-truth labeling. In particular, the roof, yellow bars, orange table and chairs, and most of the doorframe are delineated by GMM where in K-Means they are broken up by many different clusters.
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124848761-7b6a7080-df6b-11eb-9461-331412f9603c.png" width="80%" /> 
+</h1>
+<p align = "center">
+Figure 8. Area 1 WC 1
+</p>
+
+Again, note that both K-Means and GMM have clearly delineated stall lines, though again, GMM's lines are cleaner.
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124848785-858c6f00-df6b-11eb-91ac-ad55ef412e24.png" width="80%" /> 
+</h1>
+<p align = "center">
+Figure 9. Area 2 Auditorium 1
+</p>
+
+Again, the lines under the ceiling are visible in all three renderings, and GMM provides better definition to the walls than K-Means.
+
+### 3. Point Cloud Semantic Segmentation via Supervised Learning 
 Supervised learning will be used to classify different types of objects. We plan to adapt the graph based deep learning method Dynamic Graph CNN (DGCNN) and PointNet to classify objects in a building dataset. PointNet will first be used to detect and remove large objects such as floors, ceilings, and walls from the building dataset. Following this, we will use DGCNN to detect small objects inside the building to learn more about point features.
 
 As deep learning for 3D point cloud classification is an active research area, we want to compare DGCNN with conventional methods [8]. Therefore, as a point of comparison, we also plan to evaluate models using Random Forest.
 
-## Evaluation & Potential Results
-By integrating both methods of clustering and semantic segmentation in a complement way, we aim to perform the point cloud instance segmenation.
+#### Results for DGCNN and Random Forest
+The DGCNN model is trained and tested with 100 room samples from S3DIS dataset. Each test set and training set contains different rooms, and all data is labeled (default semantic segmentation labels). The following plots show our training and validation results. By comparing the training and validation, training loss is converged to minimum point and the validation loss shows fluctuating results after the loss is converged to minimum point. Training and validation accuracy both improved as the number of training and validation epochs increased. Intersection of Union (IoU) is used to evaluate performance of the deep learning models.
 
-### 1. Point Cloud Clustering
-Our proposed method will be evaluated using the common clustering matrics of Normalized Mutual Information, Adjusted Mutual Information, and Adjusted Rand Index, and be compared with other state-of-the-art results on S3DIS.
+Training Accuracy             |  Training Loss
+:-------------------------:|:-------------------------:
+![](https://user-images.githubusercontent.com/27985242/124848816-9b019900-df6b-11eb-8481-78c12b8c41a6.png)  |  ![](https://user-images.githubusercontent.com/27985242/124848856-b1a7f000-df6b-11eb-87f5-24b892118f4a.png)
+
+Validation Accuracy             |  Validation Loss
+:-------------------------:|:-------------------------:
+![](https://user-images.githubusercontent.com/27985242/124848889-bec4df00-df6b-11eb-9118-8b9bc1eaa27d.png)  |  ![](https://user-images.githubusercontent.com/27985242/124848890-bec4df00-df6b-11eb-9a67-ae48dc22cfb6.png)
+
+Training IoU             |  Validation IoU
+:-------------------------:|:-------------------------:
+![](https://user-images.githubusercontent.com/27985242/124848951-d8febd00-df6b-11eb-8b27-baf3c51eb69b.png)  |  ![](https://user-images.githubusercontent.com/27985242/124848922-cdab9180-df6b-11eb-97ea-03646f8c28b5.png)
+
+ Visual representations in point cloud data format are presented as follows. The left images are all ground truth labels and the right images are all predictions by our deep learning models.
+
+Hallway (Ground Truth)   |  Hallway (Prediction)
+:-------------------------:|:-------------------------:
+![](https://user-images.githubusercontent.com/27985242/124848975-e5831580-df6b-11eb-8a04-fa2e468a8b82.png)  |  ![](https://user-images.githubusercontent.com/27985242/124848976-e61bac00-df6b-11eb-9502-28ed1e27de6a.png)
+
+Room (Ground Truth)   |  Room (Prediction)
+:-------------------------:|:-------------------------:
+![](https://user-images.githubusercontent.com/27985242/124848977-e6b44280-df6b-11eb-8ba3-f9d1f30ec597.png)  |  ![](https://user-images.githubusercontent.com/27985242/124848978-e6b44280-df6b-11eb-8a98-7314bac2985a.png)
+
+Office (Ground Truth)   |  Office (Prediction)
+:-------------------------:|:-------------------------:
+![](https://user-images.githubusercontent.com/27985242/124848979-e6b44280-df6b-11eb-86de-b0698fa837b2.png)  |  ![](https://user-images.githubusercontent.com/27985242/124848980-e74cd900-df6b-11eb-9e9a-d8e52c3f3d86.png)
+
+#### Random Forest
+As a point of comparison to DGCNN, we have used random forest for 3D point cloud classification. To do this, features were extracted from the point cloud xyz coordinates and RGB values to train the random forest model. Below are the following features that were extracted and used:
+1. eigenvalues
+2. surface normals
+3. curvature
+4. anisotropy
+5. eigensum
+6. linearity
+7. omnivariance
+8. planarity
+9. sphericity
+10. RGB intensity
+
+A parameter study was done on the number of k-nearest neighbors used to calculate the features and the number of trees used in the forest to find the best configuation. A study on feature importance was also done using mean decrease in impurity (MDI) and permutation.
+
 <h1 align="center">
-<img src="https://github.com/yyajima21/cs7641_project/blob/64bb8b932e197f125725fda3a64128d445da2f12/imgs/clustering_samples.png" width="80%" /> 
+<img src="https://user-images.githubusercontent.com/27985242/124849084-1d8a5880-df6c-11eb-93e9-083ed5c4d8aa.png" width="50%" /> 
 </h1>
 <p align = "center">
-Figure 3. Point cloud clustering samples extracted from [9]
+Figure 10. Accuracy vs. KNNs
 </p>
 
-### 2. Point Cloud Semantic Segmentation
-To evaluate the performance of our classification tasks, we will use six metrics to compare all methods: accuracy, precision, recall, F-1 score, mIoU, and mean average precision. A visual representation in point cloud data format will also be presented.
 <h1 align="center">
-<img src="https://github.com/yyajima21/cs7641_project/blob/64bb8b932e197f125725fda3a64128d445da2f12/imgs/example.png" width="80%" /> 
+<img src="https://user-images.githubusercontent.com/27985242/124849086-1d8a5880-df6c-11eb-9187-239005727c71.png" width="50%" /> 
 </h1>
 <p align = "center">
-Figure 4. Example of point cloud classification results
+Figure 11. Accuracy vs. # Trees in Forest
 </p>
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124849082-1d8a5880-df6c-11eb-850e-3ccb2b306f95.png" width="50%" /> 
+</h1>
+<p align = "center">
+Figure 12. Feature Importance using MDI
+</p>
+
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/124849083-1d8a5880-df6c-11eb-84d1-7d0b074a90a1.png" width="50%" /> 
+</h1>
+<p align = "center">
+Figure 13. Feature Importance using Permutation
+</p>
+
+## Next Steps
+After finishing the instance labels and feature selection tasks, we plan to perform clustering using those labels. We also plan to include clustering labels as a feature for supervised learning to see if we can improve our accuracy. 
 
 ## References
 [1] D. Maturana and S. Scherer, “Voxnet: A 3d convolutional neural network for real-timeobject recognition,” in2015 IEEE/RSJ International Conference on Intelligent Robotsand Systems (IROS), pp. 922–928, IEEE, 2015.  
