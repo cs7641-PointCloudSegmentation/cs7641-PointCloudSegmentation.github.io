@@ -247,12 +247,11 @@ By comparing the training and validation, training loss is converged to minimum 
 
 All models used in the following diagram has a same training parameters as shown below.
 
-| Models      | Batch_size  | Learning rate | Clustering size | Loss function |
-| ----------- | ----------- | ------------- | --------------- | ------------- |
-| PointNet    | 4           | 0.001         | N/A             | cross entropy |
-| DGCNN       | 4           | 0.001         | 20              | cross entropy |
-| DGPointNet  | 4           | 0.001         | 20              | cross entropy |
-<br />
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/127732497-4f0b6e90-dfc9-4bd0-8fcf-4d73097efd26.png" width="70%" />
+</h1>
+<p align = "center">
+</p>
 
 <h1 align="center">
 <img src="https://user-images.githubusercontent.com/27985242/127731780-be3a4450-502c-4bd6-8c29-cd37f8767893.png" width="100%" /> 
@@ -329,12 +328,11 @@ Figure 27. Feature Importance using MDI
 
 Once the best configuration was found for each model, each model was tested using the Area 2 dataset. A confusion matrix and classification report was found for the 3 models to give us more information into what objects the models had trouble in classifying. We can see that the models had most trouble in classifying objects such as walls, floors, and tables and could more easily classify objects such as clutter, boards, and sofas. It is interesting to note that even though the overall accuracy of the model decreased when using the cluster labels from our unsupervised models, it slightly improved the classifcation of walls and floors. Our model DGPointnet is designed to to predict object semantic labels such as floors, ceilings, and walls from the building dataset which could be a potential reason why the accuracy is higher compared to random forest. The table below compares the highest accuracy each model achieved:
 
-| Classification | k-neighbors    | # of Trees     | Accuracy       |
-| -------------- | -------------- | -------------- | -------------- |
-| Ground Truth   | 10             | 100            | 0.484          |
-| KMM            | 40             | 150            | 0.4110         |
-| GMM            | 40             | 150            | 0.4099         |
-<br />
+<h1 align="center">
+<img src="https://user-images.githubusercontent.com/27985242/127732507-0250f3c0-c912-4c1d-a167-0758bef5ccb8.png" width="70%" />
+</h1>
+<p align = "center">
+</p>
 
 <h1 align="center">
 <img src="https://user-images.githubusercontent.com/27985242/127732294-eb5524a3-e391-4c0e-b03a-6e14ed667f30.PNG" width="80%" />
