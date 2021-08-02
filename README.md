@@ -306,8 +306,6 @@ As a point of comparison to DGCNN, we have used random forest for 3D point cloud
 9. sphericity
 10. RGB intensity
 
-## Conclusion
-
 A parameter study was first done on the number of k-nearest neighbors used to calculate the features and the number of trees used in the forest to find the best configuation of each random forest model. The feature importance was also found using mean decrease in impurity (MDI).
 
 <h1 align="center">
@@ -316,8 +314,8 @@ A parameter study was first done on the number of k-nearest neighbors used to ca
 <p align = "center">
  <h1 align="center">
 <img src="https://user-images.githubusercontent.com/27985242/127732282-a7b3279a-59e3-4614-bd7c-2534e4b90fb4.PNG" width="50%" />
-  </p>
 </h1>
+  </p>
 <p align = "center">
 Figure 26. (a) Ground truth classification (b) Classification with Cluster Label (KMeans) (c) Classification with Cluster Label (GMM)
 </p>
