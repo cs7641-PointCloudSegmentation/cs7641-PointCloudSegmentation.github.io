@@ -338,6 +338,7 @@ Once the best configuration was found for each model, each model was tested usin
 <img src="https://user-images.githubusercontent.com/27985242/127732294-eb5524a3-e391-4c0e-b03a-6e14ed667f30.PNG" width="80%" />
 </h1>
 <p align = "center">
+</p>
 <h1 align="center">
 <img src="https://user-images.githubusercontent.com/27985242/127732299-40435090-5d0e-4c1d-8b7d-dd6962b3ac10.PNG" width="50%" />
 </h1>
