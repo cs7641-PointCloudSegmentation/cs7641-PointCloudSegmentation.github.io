@@ -327,24 +327,20 @@ Figure 27. Feature Importance using MDI
 </p>
 
 Once the best configuration was found for each model, each model was tested using the Area 2 dataset. A confusion matrix and classification report was found for the 3 models to give us more information into what objects the models had trouble in classifying. We can see that the models had most trouble in classifying objects such as walls, floors, and tables and could more easily classify objects such as clutter, boards, and sofas. It is interesting to note that even though the overall accuracy of the model decreased when using the cluster labels from our unsupervised models, it slightly improved the classifcation of walls and floors. Our model DGPointnet is designed to to predict object semantic labels such as floors, ceilings, and walls from the building dataset which could be a potential reason why the accuracy is higher compared to random forest. The table below compares the highest accuracy each model achieved.
-
+<!-- 
 <h1 align="center">
 <img src="https://user-images.githubusercontent.com/27985242/127732507-0250f3c0-c912-4c1d-a167-0758bef5ccb8.png" width="70%" />
 </h1>
-<p align = "center">
-</p>
-
 <h1 align="center">
 <img src="https://user-images.githubusercontent.com/27985242/127732294-eb5524a3-e391-4c0e-b03a-6e14ed667f30.PNG" width="80%" />
 </h1>
-<p align = "center">
-</p>
 <h1 align="center">
 <img src="https://user-images.githubusercontent.com/27985242/127732299-40435090-5d0e-4c1d-8b7d-dd6962b3ac10.PNG" width="50%" />
 </h1>
 <p align = "center">
-Figure 28. (a) Ground truth classification (b) Classification with Cluster Label (KMeans) (c) Classification with Cluster Label (GMM)
-</p>
+Figure 28. (a) Ground Truth classification (b) Classification with Cluster Label (KMeans) (c) Classification with Cluster Label (GMM)
+</p> -->
+
 
 ## Conclusion
 
